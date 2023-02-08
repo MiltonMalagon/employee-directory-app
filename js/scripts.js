@@ -48,3 +48,22 @@ const modalHTML = `
 searchContainer.insertAdjacentHTML("beforeend", searchHTML);
 galleryContainer.insertAdjacentHTML("beforeend", galleryHTML);
 
+function checkStatus(response) {
+  if (response.ok) {
+    return Promise.resolve(response);
+  } else {
+    return Promise.reject(new Error(response.statusText))
+  }
+}
+
+function fetchData(url) {
+  return fetch(url)
+    .then(checkStatus)
+    .then(response => response.json())
+    .catch(error => console.log(error));
+}
+
+Promise.all([
+  fetchData("https://randomuser.me/api/")
+    .then(data => console.log(data))
+]);
