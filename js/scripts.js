@@ -9,18 +9,7 @@ document.addEventListener("DOMContentLoaded", async (e) => {
   `;
   //--- GALLERY ---//
   const gallery = document.querySelector("#gallery");
-  const galleryHTML = `
-    <div class="card">
-        <div class="card-img-container">
-            <img class="card-img" src="https://placehold.it/90x90" alt="profile picture">
-        </div>
-        <div class="card-info-container">
-            <h3 id="name" class="card-name cap">first last</h3>
-            <p class="card-text">email</p>
-            <p class="card-text cap">city, state</p>
-        </div>
-    </div>
-  `;
+  
   //--- MODAL ---//
   const modalHTML = `
     <div class="modal-container">
@@ -59,7 +48,7 @@ document.addEventListener("DOMContentLoaded", async (e) => {
   // }
 
   //--- GALLERY GENERATOR ---//
-  function galleryGenerator(employees) {
+  function galleryGenerator(employees) {    
     employees.forEach(employee => {
       const galleryHTML = `
         <div class="card">
@@ -77,6 +66,9 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     });
   }
 
+  //--- MODAL GENERATOR ---//
+  function modalGenerator() {}
+
   //--- REQUEST HANDLER ---//
   async function fetchData(url) {
     try {
@@ -91,22 +83,14 @@ document.addEventListener("DOMContentLoaded", async (e) => {
   //--- MAKE REQUEST ---//
   try {
     const data = await fetchData("https://randomuser.me/api/?results=12");
-    const employees = data.results;
+    const employees = await data.results;
     galleryGenerator(employees);
-    console.log(employees);
+    gallery.addEventListener("click", (e) => {      
+      if (e.target.className.includes("card")) {
+        console.log("click test")
+      }
+    });
   } catch (error) {
     throw error;
   }
-
-  // function fetchData(url) {
-  //   return fetch(url)
-  //     .then(checkStatus)
-  //     .then(response => response.json())
-  //     .catch(error => console.log(error));
-  // }
-
-  // Promise.all([
-  //   fetchData("https://randomuser.me/api/")
-  // ])
-  //   .then(data => console.log(data));
 });
