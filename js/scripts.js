@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     </form>
   `;
   //--- GALLERY ---//
+  const body = document.querySelector("body");
   const gallery = document.querySelector("#gallery");
 
   // searchContainer.insertAdjacentHTML("beforeend", searchHTML);
@@ -55,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async (e) => {
                 <hr>
                 <p class="modal-text">${employee.phone}</p>
                 <p class="modal-text">${employee.location.street.number} ${employee.location.street.name}, ${employee.location.city}, ${employee.location.postcode}</p>
-                <p class="modal-text">Birthday: 10/21/2015</p>
+                <p class="modal-text">Birthday: ${employee.dob.date}</p>
             </div>
         </div>
 
@@ -66,8 +67,7 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         </div>
       </div>
     `;
-    
-    return modalHTML;
+    body.insertAdjacentHTML("beforeend", modalHTML);
   }
 
   //--- REQUEST HANDLER ---//
@@ -90,8 +90,8 @@ document.addEventListener("DOMContentLoaded", async (e) => {
       const cards = gallery.querySelectorAll(".card");
       cards.forEach((card, index) => {
         if (card.contains(e.target)) { // contain() method found at https://serversideup.net/detect-if-click-is-inside-an-element-with-javascript/
-          // console.log(employees[index]);
-          console.log(modalGenerator(employees[index]));
+          modalGenerator(employees[index]);
+          console.log(employees[index]);
         }
       });
     });
