@@ -44,6 +44,15 @@ document.addEventListener("DOMContentLoaded", async (e) => {
 
   //--- MODAL GENERATOR ---//
   function modalGenerator(employee) {
+    function formatBirthdate(data) {
+      const date = new Date(data);
+      const month = date.getUTCMonth() + 1;
+      const day = date.getUTCDate();
+      const year = date.getUTCFullYear();
+
+      return `${month}/${day}/${year}`;
+    }
+
     const modalHTML = `
       <div class="modal-container">
         <div class="modal">
@@ -56,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async (e) => {
                 <hr>
                 <p class="modal-text">${employee.phone}</p>
                 <p class="modal-text">${employee.location.street.number} ${employee.location.street.name}, ${employee.location.city}, ${employee.location.postcode}</p>
-                <p class="modal-text">Birthday: ${employee.dob.date}</p>
+                <p class="modal-text">Birthday: ${formatBirthdate(employee.dob.date)}</p>
             </div>
         </div>
 
