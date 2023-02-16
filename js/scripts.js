@@ -9,31 +9,6 @@ document.addEventListener("DOMContentLoaded", async (e) => {
   `;
   //--- GALLERY ---//
   const gallery = document.querySelector("#gallery");
-  
-  //--- MODAL ---//
-  const modalHTML = `
-    <div class="modal-container">
-        <div class="modal">
-            <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
-            <div class="modal-info-container">
-                <img class="modal-img" src="https://placehold.it/125x125" alt="profile picture">
-                <h3 id="name" class="modal-name cap">name</h3>
-                <p class="modal-text">email</p>
-                <p class="modal-text cap">city</p>
-                <hr>
-                <p class="modal-text">(555) 555-5555</p>
-                <p class="modal-text">123 Portland Ave., Portland, OR 97204</p>
-                <p class="modal-text">Birthday: 10/21/2015</p>
-            </div>
-        </div>
-
-        // IMPORTANT: Below is only for exceeds tasks 
-        <div class="modal-btn-container">
-            <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
-            <button type="button" id="modal-next" class="modal-next btn">Next</button>
-        </div>
-    </div>
-  `;
 
   // searchContainer.insertAdjacentHTML("beforeend", searchHTML);
   // galleryContainer.insertAdjacentHTML("beforeend", galleryHTML);
@@ -47,10 +22,10 @@ document.addEventListener("DOMContentLoaded", async (e) => {
   //   }
   // }
 
-  //--- GALLERY GENERATOR ---//
-  function galleryGenerator(employees) {    
-    employees.forEach(employee => {
-      const galleryHTML = `
+  //--- CARDS GENERATOR ---//
+  function cardsGenerator(employees) {    
+    employees.forEach((employee, index) => {
+      const cardHTML = `
         <div class="card">
           <div class="card-img-container">
               <img class="card-img" src="${employee.picture.large}" alt="${employee.name.first} ${employee.name.last}">
@@ -62,12 +37,39 @@ document.addEventListener("DOMContentLoaded", async (e) => {
           </div>
         </div>
       `;
-      gallery.insertAdjacentHTML("beforeend", galleryHTML);
+      gallery.insertAdjacentHTML("beforeend", cardHTML);
     });
   }
 
   //--- MODAL GENERATOR ---//
-  function modalGenerator() {}
+  function modalGenerator(employees) {
+    employees.forEach((employee, index) => {
+      const modalHTML = `
+        <div class="modal-container">
+          <div class="modal">
+              <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+              <div class="modal-info-container">
+                  <img class="modal-img" src="https://placehold.it/125x125" alt="profile picture">
+                  <h3 id="name" class="modal-name cap">name</h3>
+                  <p class="modal-text">email</p>
+                  <p class="modal-text cap">city</p>
+                  <hr>
+                  <p class="modal-text">(555) 555-5555</p>
+                  <p class="modal-text">123 Portland Ave., Portland, OR 97204</p>
+                  <p class="modal-text">Birthday: 10/21/2015</p>
+              </div>
+          </div>
+
+          // IMPORTANT: Below is only for exceeds tasks 
+          <div class="modal-btn-container">
+              <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+              <button type="button" id="modal-next" class="modal-next btn">Next</button>
+          </div>
+        </div>
+      `;
+      console.log(modalHTML);
+    });
+  }
 
   //--- REQUEST HANDLER ---//
   async function fetchData(url) {
@@ -83,12 +85,53 @@ document.addEventListener("DOMContentLoaded", async (e) => {
   //--- MAKE REQUEST ---//
   try {
     const data = await fetchData("https://randomuser.me/api/?results=12");
-    const employees = await data.results;
-    galleryGenerator(employees);
-    gallery.addEventListener("click", (e) => {      
-      if (e.target.className.includes("card")) {
-        console.log("click test")
-      }
+    const employees = await data.results; // Array of Objects
+    cardsGenerator(employees);
+    gallery.addEventListener("click", (e) => {
+      const cards = gallery.querySelectorAll(".card"); // NodeList of Objects
+      cards.forEach((card, index) => {
+        if (card.contains(e.target)) { // contain() method found at https://serversideup.net/detect-if-click-is-inside-an-element-with-javascript/
+          console.log(employees[index]);
+        }
+      });
+
+      //--- FIFTH TRY
+      // for (let i = 0; i < cards.length; i++) {
+      //   if (cards[i].contains(e.target)) {
+      //     console.log(employees[i]);
+      //   }
+      // }
+
+      //--- FOURTH TRY
+      // cards.forEach((card, index) => {
+      //   if (e.target.className.includes("card")) {
+      //     let h3 = card.querySelector("h3");
+      //     if (h3.textContent.includes(employees[index].name.last) ) {
+      //       console.log(employees.item(index));
+      //     }
+      //   }
+      // });
+
+      //--- THIRD TRY
+      // if (e.target.className.includes("card")) {
+      //   for (let i = 0; i < cards.length; i++) {
+      //     let info = cards[i].querySelector("h3");
+      //     if (info.textContent.includes(employees[i].name.last)) {
+      //       console.log(employees[i]);
+      //     }
+      //   }
+      // }
+
+      //--- SECOND TRY
+      // for (let i = 0; i < cards.length; i++) {
+      //   let text = cards[i].textContent;
+      //   console.log(text);
+      // }
+
+      //--- FIRST TRY
+      // if (e.target.textContent.includes(employees[i].name.last)) {
+      //   console.log(cards[i]);
+      // }
     });
   } catch (error) {
     throw error;
