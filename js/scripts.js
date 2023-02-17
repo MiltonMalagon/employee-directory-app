@@ -44,6 +44,13 @@ document.addEventListener("DOMContentLoaded", async (e) => {
 
   //--- MODAL GENERATOR ---//
   function modalGenerator(employee) {
+    function formatPhone(phone) {
+      const number = phone.match(/\w+/gi).join("");
+      const format = number.replace(/^(\w{1,3})(\w{1,3})(\w+)$/gi, `($1) $2-$3`);
+      
+      return format;
+    }
+
     function formatBirthdate(data) {
       const date = new Date(data);
       const month = date.getUTCMonth() + 1;
@@ -63,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async (e) => {
                 <p class="modal-text">${employee.email}</p>
                 <p class="modal-text cap">${employee.location.city}</p>
                 <hr>
-                <p class="modal-text">${employee.phone}</p>
+                <p class="modal-text">${formatPhone(employee.phone)}</p>
                 <p class="modal-text">${employee.location.street.number} ${employee.location.street.name}, ${employee.location.city}, ${employee.location.postcode}</p>
                 <p class="modal-text">Birthday: ${formatBirthdate(employee.dob.date)}</p>
             </div>
