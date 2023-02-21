@@ -7,14 +7,15 @@ document.addEventListener("DOMContentLoaded", async (e) => {
       <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
     </form>
   `;
-  //--- GALLERY ---//
-  const body = document.querySelector("body");
-  const gallery = document.querySelector("#gallery");
-  let modal;
 
   //--- MAKE REQUEST ---//
   const data = await fetchData("https://randomuser.me/api/?results=12");
   const employees = await data.results;
+
+  //--- GALLERY ---//
+  const body = document.querySelector("body");
+  const gallery = document.querySelector("#gallery");
+  // let modal;
 
   //--- HELPER FUNCTION ---//
   // function checkStatus(response) {
@@ -86,17 +87,15 @@ document.addEventListener("DOMContentLoaded", async (e) => {
       </div>
     `;
     gallery.insertAdjacentHTML("afterend", modalHTML);
-
-    return body.querySelector(".modal-container");
     
-    // body.addEventListener("click", (e) => {
-    //   const modal = body.querySelector(".modal-container");
-    //   const close = modal.querySelector("#modal-close-btn");
-      
-    //   if (close.contains(e.target)) {
-    //     modal.remove();
-    //   }
-    // });
+    document.querySelectorAll(".modal-container").forEach(div => {
+      const close = div.querySelector(".modal-close-btn");
+      div.addEventListener("click", (e) => {
+        if (close.contains(e.target)) {
+          div.remove();
+        }
+      })
+    });
   }
 
   //--- REQUEST HANDLER ---//
@@ -113,19 +112,42 @@ document.addEventListener("DOMContentLoaded", async (e) => {
   //--- CREATE CARDS ---//
   cardsGenerator(employees);
 
-  //--- LISTEN TO CARDS' CLICKS ---//
-  gallery.addEventListener("click", (e) => {
-    const cards = gallery.querySelectorAll(".card");
-    cards.forEach((card, index) => {
-      if (card.contains(e.target)) { // contain() method found at https://serversideup.net/detect-if-click-is-inside-an-element-with-javascript/
-        modal = modalGenerator(employees[index]);
-      }
+  gallery.querySelectorAll(".card").forEach((card, index) => {
+    card.addEventListener("click", () => {
+      modalGenerator(employees[index]);
     });
   });
-  body.addEventListener("click", (e) => {
-    const close = modal.querySelector("#modal-close-btn");
-    if (close.contains(e.target)) {
-      modal.remove();
-    }
-  });
+
+  // body.addEventListener("click", (e) => {
+    //   const modal = body.querySelector(".modal-container");
+    //   const close = modal.querySelector("#modal-close-btn");
+      
+    //   if (close.contains(e.target)) {
+    //     modal.remove();
+    //   }
+    // });
+
+  // body.querySelectorAll(".modal-container").forEach(modal => {
+  //   modal.addEventListener("click", () => {
+  //     console.log(modal);
+  //   });
+  // });
+
+
+
+  //--- LISTEN TO CARDS' CLICKS ---//
+  // gallery.addEventListener("click", (e) => {
+  //   const cards = gallery.querySelectorAll(".card");
+  //   cards.forEach((card, index) => {
+  //     if (card.contains(e.target)) { // contain() method found at https://serversideup.net/detect-if-click-is-inside-an-element-with-javascript/
+  //       modal = modalGenerator(employees[index]);
+  //     }
+  //   });
+  // });
+  // body.addEventListener("click", (e) => {
+  //   const close = modal.querySelector("#modal-close-btn");
+  //   if (close.contains(e.target)) {
+  //     modal.remove();
+  //   }
+  // });
 });
