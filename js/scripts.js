@@ -13,9 +13,7 @@ document.addEventListener("DOMContentLoaded", async (e) => {
   const employees = await data.results;
 
   //--- GALLERY ---//
-  const body = document.querySelector("body");
   const gallery = document.querySelector("#gallery");
-  // let modal;
 
   //--- HELPER FUNCTION ---//
   // function checkStatus(response) {
@@ -86,15 +84,15 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         </div>
       </div>
     `;
+
     gallery.insertAdjacentHTML("afterend", modalHTML);
-    
-    document.querySelectorAll(".modal-container").forEach(div => {
-      const close = div.querySelector(".modal-close-btn");
-      div.addEventListener("click", (e) => {
-        if (close.contains(e.target)) {
-          div.remove();
-        }
-      })
+
+    document.querySelector(".modal-container").addEventListener("click", (e) => {
+      const modal = document.querySelector(".modal-container");
+      const close = document.querySelector(".modal-close-btn");
+      if (close.contains(e.target)) {
+        modal.remove();
+      }
     });
   }
 
