@@ -10,9 +10,11 @@ document.addEventListener("DOMContentLoaded", async (e) => {
   //--- GALLERY ---//
   const body = document.querySelector("body");
   const gallery = document.querySelector("#gallery");
+  let modal;
 
-  // searchContainer.insertAdjacentHTML("beforeend", searchHTML);
-  // galleryContainer.insertAdjacentHTML("beforeend", galleryHTML);
+  //--- MAKE REQUEST ---//
+  const data = await fetchData("https://randomuser.me/api/?results=12");
+  const employees = await data.results;
 
   //--- HELPER FUNCTION ---//
   // function checkStatus(response) {
@@ -25,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async (e) => {
 
   //--- CARDS GENERATOR ---//
   function cardsGenerator(employees) {    
-    employees.forEach((employee, index) => {
+    employees.forEach(employee => {
       const cardHTML = `
         <div class="card">
           <div class="card-img-container">
@@ -70,8 +72,8 @@ document.addEventListener("DOMContentLoaded", async (e) => {
                 <p class="modal-text">${employee.email}</p>
                 <p class="modal-text cap">${employee.location.city}</p>
                 <hr>
-                <p class="modal-text">${formatPhone(employee.phone)}</p>
-                <p class="modal-text">${employee.location.street.number} ${employee.location.street.name}, ${employee.location.city}, ${employee.location.postcode}</p>
+                <p class="modal-text">${formatPhone(employee.cell)}</p>
+                <p class="modal-text">${employee.location.street.number} ${employee.location.street.name}, ${employee.location.state}, ${employee.location.postcode}</p>
                 <p class="modal-text">Birthday: ${formatBirthdate(employee.dob.date)}</p>
             </div>
         </div>
@@ -83,7 +85,18 @@ document.addEventListener("DOMContentLoaded", async (e) => {
         </div>
       </div>
     `;
-    body.insertAdjacentHTML("beforeend", modalHTML);
+    gallery.insertAdjacentHTML("afterend", modalHTML);
+
+    return body.querySelector(".modal-container");
+    
+    // body.addEventListener("click", (e) => {
+    //   const modal = body.querySelector(".modal-container");
+    //   const close = modal.querySelector("#modal-close-btn");
+      
+    //   if (close.contains(e.target)) {
+    //     modal.remove();
+    //   }
+    // });
   }
 
   //--- REQUEST HANDLER ---//
@@ -97,21 +110,22 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     }
   }
 
-  //--- MAKE REQUEST ---//
-  try {
-    const data = await fetchData("https://randomuser.me/api/?results=12");
-    const employees = await data.results;
-    cardsGenerator(employees);
-    gallery.addEventListener("click", (e) => {
-      const cards = gallery.querySelectorAll(".card");
-      cards.forEach((card, index) => {
-        if (card.contains(e.target)) { // contain() method found at https://serversideup.net/detect-if-click-is-inside-an-element-with-javascript/
-          modalGenerator(employees[index]);
-          console.log(employees[index]);
-        }
-      });
+  //--- CREATE CARDS ---//
+  cardsGenerator(employees);
+
+  //--- LISTEN TO CARDS' CLICKS ---//
+  gallery.addEventListener("click", (e) => {
+    const cards = gallery.querySelectorAll(".card");
+    cards.forEach((card, index) => {
+      if (card.contains(e.target)) { // contain() method found at https://serversideup.net/detect-if-click-is-inside-an-element-with-javascript/
+        modal = modalGenerator(employees[index]);
+      }
     });
-  } catch (error) {
-    throw error;
-  }
+  });
+  body.addEventListener("click", (e) => {
+    const close = modal.querySelector("#modal-close-btn");
+    if (close.contains(e.target)) {
+      modal.remove();
+    }
+  });
 });
