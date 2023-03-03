@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const data = await fetchData("https://randomuser.me/api/?results=12&nat=us");
-  const body = document.querySelector("body");
   const searchContainer = document.querySelector(".search-container");
   const gallery = document.querySelector(".gallery");
 
@@ -96,35 +95,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     modalContainer.insertAdjacentHTML("afterbegin", infoHTML);
   }
 
-  searchContainer.addEventListener("keyup", e => {
-    const searchbox = searchContainer.querySelector(".search-input");
-    const submit = searchContainer.querySelector(".search-submit")
-    const cardsNames = gallery.querySelectorAll(".card-name");
+  function performSearch() {
+    const searchbox = document.querySelector(".search-input");
+    const submit = document.querySelector(".search-submit");
+    const form = document.querySelector("form");
+    const cardsNames = document.querySelectorAll(".card-name");
 
-    if (e.target === submit) {
-      e.preventDefault();
-    }
-
-    if (e.target === searchbox) {
+    function search() {
       let input = searchbox.value.replace(/[^a-zA-Z]/g, "").toLocaleLowerCase();
-  
+
       cardsNames.forEach(cardName => {
         let name = cardName.textContent.replace(/[^a-zA-Z]/g, "").toLocaleLowerCase();
 
-        if (name.includes(input)) {
-          cardName.parentNode.parentNode.style.display = "flex";
-        } else {
-          cardName.parentNode.parentNode.style.display = "none";
-        }
+        (name.includes(input)) ? cardName.parentNode.parentNode.style.display = "flex" : cardName.parentNode.parentNode.style.display = "none";
       });
     }
-  });
 
-  gallery.addEventListener("click", e => {
-    const cards = gallery.querySelectorAll(".card");
+    searchbox.onkeyup = search;
+    submit.onclick = search;
+    form.onsubmit = e => e.preventDefault();
+  }
+
+  function openModals() {
+    const cards = document.querySelectorAll(".card");
 
     cards.forEach((card, index) => {
-      if (card.contains(e.target)) { // contains() method found at https://serversideup.net/detect-if-click-is-inside-an-element-with-javascript/
+      card.onclick = () => {
         let cardName = card.querySelector(".card-name").textContent;
         let firstName = data[index].name.first;
         let lastName = data[index].name.last;
@@ -132,72 +128,164 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (cardName.includes(firstName) && cardName.includes(lastName)) {
           createModal();
           createInfo(data[index]);
+          controlModals(cards);
         }
       }
     });
-  });
+  }
 
-  body.addEventListener("click", e => {
-    const close = document.querySelector("#modal-close-btn");
+  function controlModals(cards) {
+    const modalContainer = document.querySelector(".modal-container");
 
-    if (close.contains(e.target)) {
-      const modalContainer = body.querySelector(".modal-container");
-      modalContainer.remove();
-    }
-
-    if (e.target.id === "modal-prev") {
-      const modalName = body.querySelector(".modal-name").textContent;
-      const modalInfo = body.querySelector(".modal");
+    modalContainer.onclick = e => {
       const employees = iterateCards(); // Dynamic array IMPORTANT!
+      const modalName = document.querySelector(".modal-name").textContent;
+      const modalInfo = document.querySelector(".modal");
+      const close = document.querySelector(".modal-close-btn");
+      const prev = document.querySelector(".modal-prev");
+      const next = document.querySelector(".modal-next");
 
-      employees.forEach((employee, index) => {
-        let firstName = employee.name.first;
-        let lastName = employee.name.last;
-
-        if (modalName.includes(firstName) && modalName.includes(lastName)) {
-          let prev = index - 1;
-
-          if (prev < index && prev >= 0) {
-            modalInfo.remove();
-            createInfo(employees[prev]);
+      function iterateCards() {
+        const newCards = [];
+  
+        for (let i = 0; i < cards.length; i++) {
+          if (cards[i].style.display !== "none") {
+            newCards.push(data[i]);
           }
         }
-      });
-    }
-    
-    if (e.target.id === "modal-next") {
-      const modalName = body.querySelector(".modal-name").textContent;
-      const modalInfo = body.querySelector(".modal");
-      const employees = iterateCards(); // Dynamic array IMPORTANT!
-
-      employees.forEach((employee, index) => {
-        let firstName = employee.name.first;
-        let lastName = employee.name.last;
-
-        if (modalName.includes(firstName) && modalName.includes(lastName)) {
-          let next = index + 1;
-
-          if (next > index && next < employees.length) {
-            modalInfo.remove();
-            createInfo(employees[next]);
-          }
-        }
-      });
-    }
-
-    function iterateCards() {
-      const cards = gallery.querySelectorAll(".card");
-      const newCards = [];
-
-      for (let i = 0; i < cards.length; i++) {
-        if (cards[i].style.display !== "none") {
-          newCards.push(data[i]);
-        }
+        return newCards;
       }
-      return newCards;
-    }
-  });
+
+      if (close.contains(e.target)) {
+        modalContainer.remove();
+      }
+
+      employees.forEach((employee, index) => {
+        let firstName = employee.name.first;
+        let lastName = employee.name.last;
+
+        if (modalName.includes(firstName) && modalName.includes(lastName)) {
+          if (prev.contains(e.target)) {
+            let prev = index - 1;
+  
+            if (prev < index && prev >= 0) {
+              modalInfo.remove();
+              createInfo(employees[prev]);
+            }
+          }
+
+          if (next.contains(e.target)) {
+            let next = index + 1;
+  
+            if (next > index && next < employees.length) {
+              modalInfo.remove();
+              createInfo(employees[next]);
+            }
+          }
+        }
+      });
+
+      // if (prev.contains(e.target)) {
+      //   employees.forEach((employee, index) => {
+      //     let firstName = employee.name.first;
+      //     let lastName = employee.name.last;
+  
+      //     if (modalName.includes(firstName) && modalName.includes(lastName)) {
+      //       let prev = index - 1;
+  
+      //       if (prev < index && prev >= 0) {
+      //         modalInfo.remove();
+      //         createInfo(employees[prev]);
+      //       }
+      //     }
+      //   });
+      // }
+
+      // if (next.contains(e.target)) {
+      //   employees.forEach((employee, index) => {
+      //     let firstName = employee.name.first;
+      //     let lastName = employee.name.last;
+  
+      //     if (modalName.includes(firstName) && modalName.includes(lastName)) {
+      //       let next = index + 1;
+  
+      //       if (next > index && next < employees.length) {
+      //         modalInfo.remove();
+      //         createInfo(employees[next]);
+      //       }
+      //     }
+      //   });
+      // }
+    };
+  
+  }
+
+
+
+
+  // body.addEventListener("click", e => {
+  //   const close = document.querySelector("#modal-close-btn");
+
+    // if (close.contains(e.target)) {
+    //   const modalContainer = body.querySelector(".modal-container");
+    //   modalContainer.remove();
+    // }
+
+  //   if (e.target.id === "modal-prev") {
+      // const modalName = body.querySelector(".modal-name").textContent;
+      // const modalInfo = body.querySelector(".modal");
+      // const employees = iterateCards(); // Dynamic array IMPORTANT!
+
+      // employees.forEach((employee, index) => {
+      //   let firstName = employee.name.first;
+      //   let lastName = employee.name.last;
+
+      //   if (modalName.includes(firstName) && modalName.includes(lastName)) {
+      //     let prev = index - 1;
+
+      //     if (prev < index && prev >= 0) {
+      //       modalInfo.remove();
+      //       createInfo(employees[prev]);
+      //     }
+      //   }
+      // });
+    // }
+    
+  //   if (e.target.id === "modal-next") {
+  //     const modalName = body.querySelector(".modal-name").textContent;
+  //     const modalInfo = body.querySelector(".modal");
+  //     const employees = iterateCards(); // Dynamic array IMPORTANT!
+
+  //     employees.forEach((employee, index) => {
+  //       let firstName = employee.name.first;
+  //       let lastName = employee.name.last;
+
+  //       if (modalName.includes(firstName) && modalName.includes(lastName)) {
+  //         let next = index + 1;
+
+  //         if (next > index && next < employees.length) {
+            // modalInfo.remove();
+            // createInfo(employees[next]);
+  //         }
+  //       }
+  //     });
+  //   }
+
+    // function iterateCards() {
+    //   const cards = gallery.querySelectorAll(".card");
+    //   const newCards = [];
+
+    //   for (let i = 0; i < cards.length; i++) {
+    //     if (cards[i].style.display !== "none") {
+    //       newCards.push(data[i]);
+    //     }
+    //   }
+    //   return newCards;
+    // }
+  // });
 
   createSearchbox();
   createCards(data);
+  performSearch();
+  openModals();
 });
