@@ -99,9 +99,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const searchbox = document.querySelector(".search-input");
     const submit = document.querySelector(".search-submit");
     const form = document.querySelector("form");
-    const cardsNames = document.querySelectorAll(".card-name");
 
     function search() {
+      const cardsNames = document.querySelectorAll(".card-name");
       let input = searchbox.value.replace(/[^a-zA-Z]/g, "").toLocaleLowerCase();
 
       cardsNames.forEach(cardName => {
