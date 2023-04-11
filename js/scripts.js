@@ -1,8 +1,17 @@
+/**
+ * "Document" listener runs script once the initial HTML document is loaded.
+ * @listens Event "DOMContentLoaded" when HTML completely loads.
+**/
 document.addEventListener("DOMContentLoaded", async () => {
+  //** -- MAIN VARIABLES -- **//
   const data = await fetchData("https://randomuser.me/api/?results=12&nat=us");
   const searchContainer = document.querySelector(".search-container");
   const gallery = document.querySelector(".gallery");
 
+  /**
+     * "fetchData" async func sends a single request to the API and grabs information of 12 random "employees".
+     * @param {String} url - resource string to fetch the random data.
+  **/
   async function fetchData(url) {
     try {
       const response = await fetch(url);
@@ -15,6 +24,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  /**
+     * "createSearchbox" func creates and inserts a searchbox into the DOM.
+  **/
   function createSearchbox() {
     const searchboxHTML = `
       <form action="#" method="get">
@@ -26,6 +38,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     searchContainer.insertAdjacentHTML("beforeend", searchboxHTML);
   }
 
+  /**
+     * "createCards" func sends a single request to the API and grabs information of 12 random "employees".
+     * @param {Array} employees - array of 12 objects with "employees" data.
+  **/
   function createCards(employees) {
     employees.forEach(employee => {
       const cardHTML = `
@@ -45,6 +61,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  /**
+     * "createModal" func creates and inserts a modal into the DOM.
+  **/
   function createModal() {
     const modalHTML = `
       <div class="modal-container">
@@ -58,6 +77,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     gallery.insertAdjacentHTML("afterend", modalHTML);
   }
 
+  /**
+     * "createInfo" func displays each employee's info within the modal container.
+     * @param {Object} employee - Object selected with employee's data.
+  **/
   function createInfo(employee) {
     const modalContainer = document.querySelector(".modal-container");
     const infoHTML = `
@@ -76,6 +99,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       </div>
     `;
 
+    /**
+     * "formatPhone" func formats each employee's phone number into a (XXX) XXX-XXXX pattern.
+     * @param {String} phone - String with the employee's phone number.
+    **/
     function formatPhone(phone) {
       const number = phone.match(/\w+/gi).join("");
       const format = number.replace(/^(\w{1,3})(\w{1,3})(\w+)$/gi, `($1) $2-$3`);
@@ -83,6 +110,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       return format;
     }
 
+    /**
+     * "formatBirthdate" func formats each employee's birth date into a MM/DD/YYYY pattern.
+     * @param {dateString} data - dateString with the employee's DOB.
+    **/
     function formatBirthdate(data) {
       const date = new Date(data);
       const month = date.getUTCMonth() + 1;
@@ -95,11 +126,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     modalContainer.insertAdjacentHTML("afterbegin", infoHTML);
   }
 
+  /**
+     * "performSearch" func filters by name the results that are already on the page.
+  **/
   function performSearch() {
     const searchbox = document.querySelector(".search-input");
     const submit = document.querySelector(".search-submit");
     const form = document.querySelector("form");
 
+    /**
+     * "search" func searches among all the results on the page and hides the ones that don't match.
+    **/
     function search() {
       const cardsNames = document.querySelectorAll(".card-name");
       let input = searchbox.value.replace(/[^a-zA-Z]/g, "").toLocaleLowerCase();
@@ -116,6 +153,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     form.onsubmit = e => e.preventDefault();
   }
 
+  /**
+     * "openModals" func opens employee's additional info when clicking on each employee's card.
+  **/
   function openModals() {
     const cards = document.querySelectorAll(".card");
 
@@ -128,13 +168,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (cardName.includes(firstName) && cardName.includes(lastName)) {
           createModal();
           createInfo(data[index]);
-          controlModals(cards);
+          toggleModals(cards);
         }
       }
     });
   }
 
-  function controlModals(cards) {
+  /**
+     * "toggleModals" func toggles back and forth between employees when the modal window is open.
+     * @param {NodeList} cards - List of card divs displayed on directory.
+  **/
+  function toggleModals(cards) {
     const modalContainer = document.querySelector(".modal-container");
 
     modalContainer.onclick = e => {
@@ -145,6 +189,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const prev = document.querySelector(".modal-prev");
       const next = document.querySelector(".modal-next");
 
+      /**
+      * "iterateCards" func iterates over the remaining cards on gallery after user's search and returns a new array of cards.
+      **/
       function iterateCards() {
         const newCards = [];
   
@@ -156,6 +203,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return newCards;
       }
 
+      // Conditional close modal when close button (X) is clicked.
       if (close.contains(e.target)) {
         modalContainer.remove();
       }
@@ -187,6 +235,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
   }
 
+  //** -- FUNCTION CALLS -- **//
   createSearchbox();
   createCards(data);
   performSearch();
