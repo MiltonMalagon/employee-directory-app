@@ -1,5 +1,5 @@
 # Employee Directory App
-## Startup employee directory app
+## Startup Employee Directory App
 ## Techdegree Project 5
 
 ### General description
