@@ -3,7 +3,7 @@
 ======================================== */
 
 /* @import url('https://fonts.googleapis.com/css?family=Nunito'); */
-@import url('https://fonts.googleapis.com/css2?family=Varela+Round'); /* font changed */
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round'); /* custom */
 
 * {
 	box-sizing: border-box;
@@ -26,11 +26,11 @@ html, body {
 
 body {
     /* font-family: "Nunito", sans-serif; */
-    font-family: "Varela Round", sans-serif; /* font changed */
+    font-family: "Varela Round", sans-serif; /* custom */
     text-align: center;
     /* background: rgba(235, 235, 235, 0.9); */
     /* background: #FFB94A; */
-    background: #8142BE; /* background changed */
+    background: #8142BE; /* custom */
 }
 
 header {
@@ -46,7 +46,7 @@ header h1 {
     /* font-size: 1.25em; */
     font-size: 1.25em;
     /* color: rgba(50, 50, 50, 0.9); */
-    color: #340463; /* color changed */
+    color: #340463; /* custom */
     margin-top: 35px;
 }
 
@@ -104,10 +104,10 @@ header h1 {
     background: rgba(245, 245, 245, 0.9);
     border-radius: 0.25em;
     border: 1px solid rgba(50, 50, 50, 0.3);
-    box-shadow: 0px 5px 5px rgba(69, 7, 128, .7);
+    box-shadow: 0px 5px 5px rgba(69, 7, 128, .7); /* custom */
     transition: .4s ease-out;
-    animation-name: fadeIn;
-    animation-duration: 1s;
+    animation-name: fadeIn; /* custom */
+    animation-duration: 1s; /* custom */
     overflow: hidden;
 }
 

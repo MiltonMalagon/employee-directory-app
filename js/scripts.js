@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   /**
-     * "createCards" func sends a single request to the API and grabs information of 12 random "employees".
+     * "createCards" func creates cards with basic info of each employee.
      * @param {Array} employees - array of 12 objects with "employees" data.
   **/
   function createCards(employees) {
