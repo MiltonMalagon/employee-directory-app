@@ -43,7 +43,7 @@ This function toggles back and forth between employees when the modal window is 
 ### Extra
 Custom CSS styles (changes described as /* custom */).
 
-- Font style: Varela Round (applied to the document).
+- Font style: Varela Round (applied to document).
 - Background color: #8142BE (applied to background). 
 - Animation styles: @keyframes fadeIn (applied to cards).
 - Color styles: #340463 (applied to title).
